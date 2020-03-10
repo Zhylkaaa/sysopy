@@ -1,6 +1,6 @@
 CC = gcc -Wall -std=c11 -ggdb
 
-all: static shared clean
+all: time-tests-shared-O3 time-tests-shared-O0 time-tests-shared-Os clean
 
 static: library.o
 		ar rcs library.a library.o
@@ -15,10 +15,6 @@ library.o: library.c library.h
 clean:
 		rm -f *.o
 
-tests:
-
-		./test create_table 5
-		#./test create_table 2 compare_pairs a.txt:b.txt a.txt:b.txt remove_operation 0 2 remove_block 0
 
 shared-O3: library.c library.h
 		$(CC) -c -fPIC -O3 library.c

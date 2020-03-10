@@ -1,6 +1,6 @@
 CC = gcc -Wall -std=c11 -ggdb
 
-all: static shared clean
+all: zad2_static tests zad2_shared tests time-tests clean
 
 static: library.o
 		ar rcs library.a library.o
@@ -26,9 +26,8 @@ clean:
 		rm -f *.o
 
 tests:
-
-		./test create_table 5
-		#./test create_table 2 compare_pairs a.txt:b.txt a.txt:b.txt remove_operation 0 2 remove_block 0
+		#./test create_table 5
+		./test create_table 2 compare_pairs a.txt:b.txt a.txt:b.txt remove_operation 0 2 remove_block 0
 
 time-tests: static measure_time.c
 		make static
