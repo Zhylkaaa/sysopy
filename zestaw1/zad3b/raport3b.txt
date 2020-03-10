@@ -1,0 +1,303 @@
+shared library usage with -O3 flag
+
+tests for small_similar dataset
+for block size 2
+  REAL    User    System
+compare 5 pairs
+0.040000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_similar dataset
+for block size 2
+  REAL    User    System
+compare 12 pairs
+0.070000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for big_similar dataset
+for block size 2
+  REAL    User    System
+compare 30 pairs
+0.160000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for small_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 4 pairs
+0.020000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 11 pairs
+0.060000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000909   0.000000   0.000000   
+
+
+tests for big_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 30 pairs
+0.190000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000333   0.000333   0.000000   
+
+
+tests for small_dif dataset
+for block size 500
+  REAL    User    System
+compare 5 pairs
+0.030000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_dif dataset
+for block size 500
+  REAL    User    System
+compare 12 pairs
+0.070000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000833   0.000000   0.000000   
+
+
+tests for big_dif dataset
+for block size 500
+  REAL    User    System
+compare 30 pairs
+0.330000   0.010000   0.010000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000333   0.000333   0.000000   
+
+
+shared library usage with -O0 flag
+
+tests for small_similar dataset
+for block size 2
+  REAL    User    System
+compare 5 pairs
+0.050000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_similar dataset
+for block size 2
+  REAL    User    System
+compare 12 pairs
+0.140000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for big_similar dataset
+for block size 2
+  REAL    User    System
+compare 30 pairs
+0.380000   0.000000   0.010000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for small_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 4 pairs
+0.050000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.002500   0.000000   0.000000   
+
+
+tests for medium_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 11 pairs
+0.090000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000909   0.000000   
+
+
+tests for big_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 30 pairs
+0.220000   0.010000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000333   0.000333   0.000000   
+
+
+tests for small_dif dataset
+for block size 500
+  REAL    User    System
+compare 5 pairs
+0.030000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_dif dataset
+for block size 500
+  REAL    User    System
+compare 12 pairs
+0.090000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000833   0.000833   0.000000   
+
+
+tests for big_dif dataset
+for block size 500
+  REAL    User    System
+compare 30 pairs
+0.500000   0.020000   0.030000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.001000   0.001000   0.000000   
+
+
+shared library usage with -Os flag
+
+tests for small_similar dataset
+for block size 2
+  REAL    User    System
+compare 5 pairs
+0.030000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_similar dataset
+for block size 2
+  REAL    User    System
+compare 12 pairs
+0.060000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for big_similar dataset
+for block size 2
+  REAL    User    System
+compare 30 pairs
+0.180000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for small_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 4 pairs
+0.040000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 11 pairs
+0.110000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000909   0.000000   0.000000   
+
+
+tests for big_halfdif dataset
+for block size 450
+  REAL    User    System
+compare 30 pairs
+0.210000   0.010000   0.010000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000333   0.000333   0.000000   
+
+
+tests for small_dif dataset
+for block size 500
+  REAL    User    System
+compare 5 pairs
+0.030000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000000   0.000000   0.000000   
+
+
+tests for medium_dif dataset
+for block size 500
+  REAL    User    System
+compare 12 pairs
+0.070000   0.000000   0.000000   
+delete block mean
+0.000000   0.000000   0.000000   
+add and delete mean
+0.000833   0.000000   0.000000   
+
+
+tests for big_dif dataset
+for block size 500
+  REAL    User    System
+compare 30 pairs
+0.190000   0.000000   0.000000   
+delete block mean
+0.000000   0.000333   0.000000   
+add and delete mean
+0.000333   0.000000   0.000000   
+
+
