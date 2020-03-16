@@ -1,0 +1,145 @@
+
+test for file with 60000 records of length 4
+sys
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+lib
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+test for file with 120000 records of length 4
+sys
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+lib
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+test for file with 360000 records of length 4
+sys
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+lib
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+test for file with 500000 records of length 4
+sys
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+lib
+REAL        USER       SYSTEM
+0.000000    0.000000   0.000000
+
+test for file with 60000 records of length 512
+sys
+REAL        USER       SYSTEM
+0.030000    0.000000   0.020000
+
+lib
+REAL        USER       SYSTEM
+0.090000    0.000000   0.080000
+
+test for file with 120000 records of length 512
+sys
+REAL        USER       SYSTEM
+0.040000    0.000000   0.020000
+
+lib
+REAL        USER       SYSTEM
+0.180000    0.000000   0.160000
+
+test for file with 360000 records of length 512
+sys
+REAL        USER       SYSTEM
+0.130000    0.000000   0.080000
+
+lib
+REAL        USER       SYSTEM
+0.460000    0.010000   0.440000
+
+test for file with 500000 records of length 512
+sys
+REAL        USER       SYSTEM
+0.100000    0.000000   0.090000
+
+lib
+REAL        USER       SYSTEM
+0.980000    0.010000   0.640000
+
+test for file with 60000 records of length 4096
+sys
+REAL        USER       SYSTEM
+0.180000    0.000000   0.140000
+
+lib
+REAL        USER       SYSTEM
+0.660000    0.010000   0.620000
+
+test for file with 120000 records of length 4096
+sys
+REAL        USER       SYSTEM
+0.370000    0.000000   0.240000
+
+lib
+REAL        USER       SYSTEM
+1.180000    0.030000   1.000000
+
+test for file with 360000 records of length 4096
+sys
+REAL        USER       SYSTEM
+1.170000    0.000000   0.670000
+
+lib
+REAL        USER       SYSTEM
+2.960000    0.100000   2.230000
+
+test for file with 500000 records of length 4096
+sys
+REAL        USER       SYSTEM
+2.920000    0.000000   1.320000
+
+lib
+REAL        USER       SYSTEM
+3.940000    0.140000   2.830000
+
+test for file with 60000 records of length 8192
+sys
+REAL        USER       SYSTEM
+0.380000    0.000000   0.280000
+
+lib
+REAL        USER       SYSTEM
+1.210000    0.030000   0.970000
+
+test for file with 120000 records of length 8192
+sys
+REAL        USER       SYSTEM
+1.000000    0.000000   0.480000
+
+lib
+REAL        USER       SYSTEM
+1.790000    0.070000   1.480000
+
+test for file with 360000 records of length 8192
+sys
+REAL        USER       SYSTEM
+4.100000    0.010000   2.010000
+
+lib
+REAL        USER       SYSTEM
+8.280000    0.220000   4.390000
+
+test for file with 500000 records of length 8192
+sys
+REAL        USER       SYSTEM
+5.640000    0.010000   2.460000
+
+lib
+REAL        USER       SYSTEM
+15.940000    0.270000   11.990000
+
