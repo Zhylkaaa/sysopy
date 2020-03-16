@@ -1,0 +1,3 @@
+wyniki testów znajdują się w pliku copy_test_result.txt i sort_test_result.txt dla funkcji copy i sort odpowiednio
+
+sortowanie jak i kopiowanie jest znacznie szybsze używając funkcji systemowe
