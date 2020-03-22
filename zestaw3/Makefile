@@ -5,4 +5,4 @@ all: test
 test: main.c child.c
 		$(CC) -o main main.c
 		$(CC) -o child child.c
-		./main lists 4 1000 0
+		./main lists 2 1 0

@@ -161,12 +161,31 @@ int main(int argc, char **argv) {
     flock(fileno(f), LOCK_UN);
 
     int status = 0;
+    int timeout = atoi(argv[3]) * 1000000;
+    int time = 0;
+    int sleep_time = 20000; //20 ms
 
     for(int i = 0;i<worker_count;i++){
-        waitpid(worker_pool[i], &status, 0);
-        printf("Process with PID %d performed %d multiplications\n", worker_pool[i], WEXITSTATUS(status));
+        while(time < timeout){
+            waitpid(worker_pool[i], &status, WNOHANG);
+            if(status != 0){
+                printf("Process with PID %d performed %d multiplications\n", worker_pool[i], WEXITSTATUS(status));
+                break;
+            } else {
+                usleep(sleep_time);
+                time += sleep_time;
+            }
+        }
+        if(time >= timeout){
+            flock(fileno(f), LOCK_EX);
+            fseek(f, 2*i*sizeof(char), SEEK_SET);
+            fprintf(f, "0\n");
+            fflush(f);
+            flock(fileno(f), LOCK_UN);
+            waitpid(worker_pool[i], &status, 0);
+            printf("Process with PID %d performed %d multiplications\n", worker_pool[i], WEXITSTATUS(status));
+        }
     }
-
     printf("Main Process ends\n");
 
     return 0;

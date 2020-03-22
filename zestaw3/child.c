@@ -51,6 +51,21 @@ void print(int* t, int N){
     printf("\n");
 }
 
+int status;
+int counter;
+int idx;
+
+void check_kill(int com_fd, FILE* com){
+    flock(com_fd, LOCK_EX);
+    fseek(com, 2*idx*sizeof(char), SEEK_SET);
+    fscanf(com, "%d", &status);
+    if(status == 0){
+        flock(com_fd, LOCK_UN);
+        exit(counter);
+    }
+    flock(com_fd, LOCK_UN);
+}
+
 int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp", path_to_A, row_A, col_A, path_to_B, row_B, col_B, path_to_C, mode
 
     if(argc != 12){
@@ -60,7 +75,7 @@ int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp"
 
     printf("Child process with ID %s\n", argv[1]);
 
-    int idx = atoi(argv[1]);
+    idx = atoi(argv[1]);
     int stride = atoi(argv[2]);
 
     int row_A = atoi(argv[5]), col_A = atoi(argv[6]), row_B = atoi(argv[8]), col_B = atoi(argv[9]);
@@ -82,7 +97,6 @@ int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp"
     }
 
     int com_fd = fileno(com);
-    int status;
 
     int last;
     char** buf = (char**) calloc(row_A, sizeof(char*));
@@ -109,20 +123,8 @@ int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp"
     int* A_row = calloc(col_A, sizeof(int));
     int* C_col = calloc(row_A, sizeof(int));
 
-    int counter = 0;
-
     for(int i = idx; i<col_B; i+=stride){
-        while(flock(com_fd, LOCK_EX | LOCK_NB) == -1){
-            //printf("%d\n", errno);
-            //usleep(2);
-        }
-        fseek(com, 2*idx*sizeof(char), SEEK_SET);
-        fscanf(com, "%d", &status);
-        flock(com_fd, LOCK_UN);
-        if(status == 0){
-            exit(counter);
-        }
-
+        check_kill(com_fd, com);
         counter += 1;
 
         fseek(f_B, 0, SEEK_SET);
@@ -142,6 +144,7 @@ int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp"
         fseek(com, 2*stride*sizeof(char), SEEK_SET);
         fscanf(com, "%d", &last);
         while(last != i - 1){
+            check_kill(com_fd, com);
             usleep(2);
             fseek(com, 2*stride*sizeof(char), SEEK_SET);
             fscanf(com, "%d", &last);
@@ -166,9 +169,12 @@ int main(int argc, char** argv){ // "./child", cidx, stride, "communication.tmp"
             }
             fflush(f_C);
             flock(fileno(f_C), LOCK_UN);
+
+            flock(com_fd, LOCK_EX);
             fseek(com, 2*stride*sizeof(char), SEEK_SET);
             fprintf(com, "%d\n", i);
             fflush(com);
+            flock(com_fd, LOCK_UN);
         }
     }
 
