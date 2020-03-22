@@ -126,6 +126,13 @@ int main(int argc, char **argv) {
 
     flock(fileno(f), LOCK_EX);
 
+    char* mode = argv[4];
+
+    if(strcmp(mode, "1") != 0 && strcmp(mode, "0")){
+        printf("Wrong mode\n");
+        exit(1);
+    }
+
     for (int i = 0; i < worker_count; i++) {
         fwrite("1\n", sizeof(char), 2, f);
         if((worker_pool[i] = fork()) == 0){
@@ -151,8 +158,7 @@ int main(int argc, char **argv) {
             snprintf(ccol_B, len, "%d", col_B);
             // refactor
 
-            execl("./child", "./child", cidx, stride, "communication.tmp", path_to_A, crow_A, ccol_A, path_to_B, crow_B, ccol_B, path_to_C, "0", NULL);
-            exit(0);
+            execl("./child", "./child", cidx, stride, "communication.tmp", path_to_A, crow_A, ccol_A, path_to_B, crow_B, ccol_B, path_to_C, mode, NULL);
         }
     }
 
@@ -164,6 +170,7 @@ int main(int argc, char **argv) {
     int timeout = atoi(argv[3]) * 1000000;
     int time = 0;
     int sleep_time = 20000; //20 ms
+    int num_files = 0;
 
     for(int i = 0;i<worker_count;i++){
         while(time < timeout){
@@ -183,8 +190,37 @@ int main(int argc, char **argv) {
             fflush(f);
             flock(fileno(f), LOCK_UN);
             waitpid(worker_pool[i], &status, 0);
-            printf("Process with PID %d performed %d multiplications\n", worker_pool[i], WEXITSTATUS(status));
+            printf("Process with PID %d performed %d multiplications before being killed\n", worker_pool[i], WEXITSTATUS(status));
         }
+
+        num_files += WEXITSTATUS(status);
+    }
+
+    if(strcmp(mode, "1") == 0){
+        if(fork() == 0){
+            char** params = (char**) calloc(num_files+3, sizeof(char*));
+            params[0] = "/usr/bin/paste";
+            params[1] = "-d";
+            params[2] = " ";
+
+            FILE* o = fopen(path_to_C, "w+");
+            if(o == NULL){
+                printf("Error opening output file\n");
+                exit(1);
+            }
+
+            dup2(fileno(o), 1);
+            int len;
+            for(int i = 0;i<num_files; i++){
+                len = snprintf(NULL, 0, "%d", i)+1;
+                params[i+3] = calloc(len, sizeof(char));
+                snprintf(params[i+3], len, "%d", i);
+            }
+
+            execv(params[0], params);
+            exit(0);
+        }
+        wait(0);
     }
     printf("Main Process ends\n");
 
