@@ -77,7 +77,6 @@ int preprocess_file(char* path, int* row, int* col){
         if(*row == 1){
             char* t[20];
             int offset = 0;
-            int len = strlen(buf);
 
             while(sscanf(buf+offset, "%s", t) != EOF){
                 offset += (strlen(t) + 1) * sizeof(char);
@@ -120,8 +119,17 @@ int main(int argc, char **argv) {
     char stride[len];
     snprintf(stride, len, "%d", worker_count);
 
+    // create communication file
+    // first worker_count lines tell each process if it's should be terminated (time out reached)
+    // next line tells what was the last column written to file
+    FILE* f = fopen("communication.tmp", "w+");
+
+    flock(fileno(f), LOCK_EX);
+
     for (int i = 0; i < worker_count; i++) {
+        fwrite("1\n", sizeof(char), 2, f);
         if((worker_pool[i] = fork()) == 0){
+            // TODO: refactor
             len = snprintf(NULL, 0, "%d", i)+1;
             char cidx[len];
             snprintf(cidx, len, "%d", i);
@@ -141,11 +149,16 @@ int main(int argc, char **argv) {
             len = snprintf(NULL, 0, "%d", col_B)+1;
             char ccol_B[len];
             snprintf(ccol_B, len, "%d", col_B);
+            // refactor
 
-            execl("./child", "./child", cidx, stride, argv[3], path_to_A, crow_A, ccol_A, path_to_B, crow_B, ccol_B, NULL);
+            execl("./child", "./child", cidx, stride, "communication.tmp", path_to_A, crow_A, ccol_A, path_to_B, crow_B, ccol_B, path_to_C, "0", NULL);
             exit(0);
         }
     }
+
+    fwrite("-1\n", sizeof(char), 3, f);
+    fflush(f);
+    flock(fileno(f), LOCK_UN);
 
     int status = 0;
 
