@@ -132,6 +132,11 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    if(strcmp(mode, "0") == 0){
+        FILE* tm = fopen(path_to_C, "w+");
+        fclose(tm);
+    }
+
     for (int i = 0; i < worker_count; i++) {
         fwrite("1\n", sizeof(char), 2, f);
         if((worker_pool[i] = fork()) == 0){
@@ -195,6 +200,9 @@ int main(int argc, char **argv) {
         num_files += WEXITSTATUS(status);
     }
 
+    free(path_to_A);
+    free(path_to_B);
+
     if(strcmp(mode, "1") == 0){
         FILE* o = fopen(path_to_C, "w+");
         if(fork() == 0){
@@ -224,7 +232,6 @@ int main(int argc, char **argv) {
         wait(0);
     }
     printf("Main Process ends\n");
-
 
     return 0;
 }

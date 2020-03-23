@@ -84,14 +84,6 @@ int main(int argc,
 
     FILE *f_A = fopen(argv[4], "r+");
     FILE *f_B = fopen(argv[7], "r+");
-    FILE *f_C = NULL;
-    if (strcmp(mode, "0") == 0) {
-        f_C = fopen(argv[10], "w+");
-        if(f_C == NULL){
-            printf("Can't open file %s\n", argv[10]);
-            exit(0);
-        }
-    }
 
     if (f_A == NULL) {
         printf("Can't open file %s\n", argv[4]);
@@ -147,18 +139,21 @@ int main(int argc,
 
         if (strcmp(mode, "0") == 0) {
             // wait for idx of last written column in file to be idx - 1
-            flock(com_fd, LOCK_EX);
-            fseek(com, 2 * stride * sizeof(char), SEEK_SET);
-            fscanf(com, "%d", &last);
-            flock(com_fd, LOCK_UN);
+            last = -2;
             while (last != i - 1) {
                 check_kill(com_fd, com);
-                usleep(2);
                 flock(com_fd, LOCK_EX);
                 fseek(com, 2 * stride * sizeof(char), SEEK_SET);
                 fscanf(com, "%d", &last);
                 flock(com_fd, LOCK_UN);
             }
+
+            FILE *f_C = fopen(argv[10], "r+");
+            if(f_C == NULL){
+                printf("Can't open output file\n");
+                exit(counter);
+            }
+
             flock(fileno(f_C), LOCK_EX);
 
             fseek(f_C, 0, SEEK_SET);
@@ -168,30 +163,41 @@ int main(int argc,
 
                 lens[j] = getline(&b, &s, f_C);
                 buf[j] = b;
+                if(lens[j] == EOF){
+                    buf[j] = NULL;
+                    break;
+                }
+                if(lens[j] == 0){
+                    buf[j][lens[j]] = '\0';
+                }
 
-                if (lens[j] > 0 && lens[j] != EOF) {
+                if (lens[j] > 0) {
                     //len = strlen(buf[j]);
-                    buf[j][lens[j]-1] = '\0';
+                    buf[j][lens[j]-1] = ' ';
                     buf[j][lens[j]] = '\0';
                 }
 
                 //printf("%s\n", buf[j]);
             }
-
-
+            
             fseek(f_C, 0, SEEK_SET);
             for (int j = 0; j < row_A; j++) {
-                if (lens[j] > 0 && lens[j] != EOF) {
-                    fprintf(f_C, "%s %d\n", buf[j], C_col[j]);
+                if (buf[j] != NULL) {
+                    fprintf(f_C, "%s%d\n", buf[j], C_col[j]);
                 } else {
                     fprintf(f_C, "%d\n", C_col[j]);
                 }
                 fflush(f_C);
-                //free(buf[j]);
-                buf[j] = NULL;
             }
             fflush(f_C);
+            fclose(f_C);
+
+            for (int j = 0; j < row_A; j++) {
+                free(buf[j]);
+                buf[j] = NULL;
+            }
             flock(fileno(f_C), LOCK_UN);
+            fclose(f_C);
 
             // write result to file and change last written column in file
             flock(com_fd, LOCK_EX);
