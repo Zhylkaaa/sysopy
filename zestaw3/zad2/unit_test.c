@@ -59,12 +59,12 @@ void write_to_file(int** M, int n, int m, int idx, char* type){
 }
 
 int main() {
-    int n = 10;
+    int n = 5;
 
     FILE *random_stream = fopen("/dev/random", "r");
 
-    int size_min = 3;
-    int size_max = 5;
+    int size_min = 5;
+    int size_max = 10;
 
     for (int i = 0; i < n; i++) {
         int m, k, c;
@@ -89,7 +89,6 @@ int main() {
             execl("./main", "./main", "lists", "10", "10", "1", NULL);
             exit(0);
         }
-
         int** res = calloc(m, sizeof(int*));
 
         for (int ii = 0;ii<m;ii++){

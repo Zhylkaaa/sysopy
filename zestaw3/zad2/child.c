@@ -113,10 +113,11 @@ int main(int argc,
 
     int last;
     char **buf = (char **) calloc(row_A, sizeof(char *));
-    size_t *sizes = (size_t *) calloc(row_A, sizeof(size_t));
+    size_t *lens = (size_t *) calloc(row_A, sizeof(size_t));
+
     for (int i = 0; i < row_A; i++) {
         buf[i] = NULL;
-        sizes[i] = 0;
+        lens[i] = 0;
     }
 
     fseek(com, 2 * idx * sizeof(char), SEEK_SET);
@@ -159,21 +160,35 @@ int main(int argc,
                 flock(com_fd, LOCK_UN);
             }
             flock(fileno(f_C), LOCK_EX);
+
             fseek(f_C, 0, SEEK_SET);
             for (int j = 0; j < row_A; j++) {
-                size_t len = getline(&(buf[j]), &(sizes[j]), f_C);
-                if (len > 0) {
+                char* b = NULL;
+                size_t s = 0;
+
+                lens[j] = getline(&b, &s, f_C);
+                buf[j] = b;
+
+                if (lens[j] > 0 && lens[j] != EOF) {
                     //len = strlen(buf[j]);
-                    buf[j][len-1] = '\0';
+                    buf[j][lens[j]-1] = '\0';
+                    buf[j][lens[j]] = '\0';
                 }
+
+                //printf("%s\n", buf[j]);
             }
+
+
             fseek(f_C, 0, SEEK_SET);
             for (int j = 0; j < row_A; j++) {
-                if (sizes[j] == 0 || strlen(buf[j]) == 0) {
-                    fprintf(f_C, "%d\n", C_col[j]);
-                } else {
+                if (lens[j] > 0 && lens[j] != EOF) {
                     fprintf(f_C, "%s %d\n", buf[j], C_col[j]);
+                } else {
+                    fprintf(f_C, "%d\n", C_col[j]);
                 }
+                fflush(f_C);
+                //free(buf[j]);
+                buf[j] = NULL;
             }
             fflush(f_C);
             flock(fileno(f_C), LOCK_UN);
