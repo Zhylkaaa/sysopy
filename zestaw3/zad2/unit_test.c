@@ -86,7 +86,7 @@ int main() {
         write_to_file(B, k, c, 0, "b");
         int pid;
         if ((pid = fork()) == 0) {
-            execl("./main", "./main", "lists", "10", "10", "0", NULL);
+            execl("./main", "./main", "lists", "10", "10", "1", NULL);
             exit(0);
         }
         int** res = calloc(m, sizeof(int*));
