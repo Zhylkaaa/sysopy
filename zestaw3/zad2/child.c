@@ -87,6 +87,10 @@ int main(int argc,
     FILE *f_C = NULL;
     if (strcmp(mode, "0") == 0) {
         f_C = fopen(argv[10], "w+");
+        if(f_C == NULL){
+            printf("Can't open file %s\n", argv[10]);
+            exit(0);
+        }
     }
 
     if (f_A == NULL) {
@@ -142,25 +146,30 @@ int main(int argc,
 
         if (strcmp(mode, "0") == 0) {
             // wait for idx of last written column in file to be idx - 1
+            flock(com_fd, LOCK_EX);
             fseek(com, 2 * stride * sizeof(char), SEEK_SET);
             fscanf(com, "%d", &last);
+            flock(com_fd, LOCK_UN);
             while (last != i - 1) {
                 check_kill(com_fd, com);
                 usleep(2);
+                flock(com_fd, LOCK_EX);
                 fseek(com, 2 * stride * sizeof(char), SEEK_SET);
                 fscanf(com, "%d", &last);
+                flock(com_fd, LOCK_UN);
             }
             flock(fileno(f_C), LOCK_EX);
             fseek(f_C, 0, SEEK_SET);
             for (int j = 0; j < row_A; j++) {
-                size_t len = getline(&buf[j], &sizes[j], f_C);
+                size_t len = getline(&(buf[j]), &(sizes[j]), f_C);
                 if (len > 0) {
-                    buf[j][len - 1] = '\0';
+                    //len = strlen(buf[j]);
+                    buf[j][len-1] = '\0';
                 }
             }
             fseek(f_C, 0, SEEK_SET);
             for (int j = 0; j < row_A; j++) {
-                if (strlen(buf[j]) == 0) {
+                if (sizes[j] == 0 || strlen(buf[j]) == 0) {
                     fprintf(f_C, "%d\n", C_col[j]);
                 } else {
                     fprintf(f_C, "%s %d\n", buf[j], C_col[j]);
