@@ -19,14 +19,11 @@
 #include <errno.h>
 
 int read_from_file(FILE* f, char** dest){
-    size_t size = 0;
-    size_t l = getline(dest, &size, f);
-    if(l == 0){
+    *dest = calloc(100, sizeof(char));
+    if(fscanf(f, "%s\n", *dest) == 0){
         printf("Can't read line from file, EOF reached\n");
         return 1;
     }
-
-    (*dest)[size-2] = '\0';
     return 0;
 }
 
@@ -52,13 +49,13 @@ int read_paths(char* lists_path, char** path_to_A, char** path_to_B, char** path
         return 1;
     }
 
-    if(access(*path_to_A, F_OK | R_OK) == -1 || access(*path_to_B, F_OK | R_OK) == -1){
+    /*if(access(*path_to_A, F_OK | R_OK) == -1 || access(*path_to_B, F_OK | R_OK) == -1){
         printf("Can't read specified files or files doesn't exist\n");
         free(path_to_A);
         free(path_to_B);
         free(path_to_C);
         return 1;
-    }
+    }*/
     return 0;
 }
 
@@ -75,7 +72,7 @@ int preprocess_file(char* path, int* row, int* col){
     while(getline(&buf, &size, f) != -1){
         (*row)++;
         if(*row == 1){
-            char* t[20];
+            char t[20];
             int offset = 0;
 
             while(sscanf(buf+offset, "%s", t) != EOF){
@@ -106,6 +103,8 @@ int main(int argc, char **argv) {
     if(read_paths(argv[1], &path_to_A, &path_to_B, &path_to_C) != 0){
         exit(1);
     }
+
+    //printf("%s %s %s\n", path_to_A, path_to_B, path_to_C);
 
     // preprocessing to find size of matrix
     int row_A = 0, col_A = 0;
@@ -174,8 +173,7 @@ int main(int argc, char **argv) {
 
     for(int i = 0;i<worker_count;i++){
         while(time < timeout){
-            waitpid(worker_pool[i], &status, WNOHANG);
-            if(status != 0){
+            if(waitpid(worker_pool[i], &status, WNOHANG) != 0){
                 printf("Process with PID %d performed %d multiplications\n", worker_pool[i], WEXITSTATUS(status));
                 break;
             } else {
@@ -183,6 +181,7 @@ int main(int argc, char **argv) {
                 time += sleep_time;
             }
         }
+
         if(time >= timeout){
             flock(fileno(f), LOCK_EX);
             fseek(f, 2*i*sizeof(char), SEEK_SET);
@@ -197,13 +196,13 @@ int main(int argc, char **argv) {
     }
 
     if(strcmp(mode, "1") == 0){
+        FILE* o = fopen(path_to_C, "w+");
         if(fork() == 0){
-            char** params = (char**) calloc(num_files+3, sizeof(char*));
-            params[0] = "/usr/bin/paste";
+            char** params = (char**) calloc(num_files+4, sizeof(char*));
+            params[0] = "/usr/bin/paste"; // only macOS path?
             params[1] = "-d";
             params[2] = " ";
 
-            FILE* o = fopen(path_to_C, "w+");
             if(o == NULL){
                 printf("Error opening output file\n");
                 exit(1);
@@ -212,10 +211,12 @@ int main(int argc, char **argv) {
             dup2(fileno(o), 1);
             int len;
             for(int i = 0;i<num_files; i++){
-                len = snprintf(NULL, 0, "%d", i)+1;
+                len = snprintf(NULL, 0, "/tmp/%d", i)+1;
                 params[i+3] = calloc(len, sizeof(char));
-                snprintf(params[i+3], len, "%d", i);
+                snprintf(params[i+3], len, "/tmp/%d", i);
             }
+
+            params[num_files+3] = NULL;
 
             execv(params[0], params);
             exit(0);

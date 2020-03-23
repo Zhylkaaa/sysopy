@@ -119,7 +119,6 @@ int main(int argc,
     fscanf(com, "%d", &status);
 
     flock(com_fd, LOCK_UN);
-    printf("status: %d\n", status);
 
     int *B_col = calloc(row_B, sizeof(int));
     int *A_row = calloc(col_A, sizeof(int));
@@ -177,9 +176,9 @@ int main(int argc,
             fflush(com);
             flock(com_fd, LOCK_UN);
         } else {
-            int len = snprintf(NULL, 0, "%d", i) + 1;
+            int len = snprintf(NULL, 0, "/tmp/%d", i) + 1;
             char *path = calloc(len, sizeof(char));
-            snprintf(path, len, "%d", i);
+            snprintf(path, len, "/tmp/%d", i);
 
             FILE *f = fopen(path, "w");
             if (f == NULL) {
@@ -194,6 +193,6 @@ int main(int argc,
             fclose(f);
         }
     }
-
+    fclose(com);
     exit(counter);
 }
