@@ -5,7 +5,7 @@ all: test
 test: main.c child.c
 		$(CC) -o main main.c
 		$(CC) -o child child.c
-		./main lists 10 10 0
+		./main lists 10 1 0
 
 generate_test: generator.c
 		$(CC) -o generator generator.c
