@@ -1,0 +1,3 @@
+ls -l | wc -l
+ps aux | grep root | wc -l
+echo "ala ma kota" | wc -c
