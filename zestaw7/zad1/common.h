@@ -38,13 +38,20 @@ int sem_id = -1;
 typedef struct shared_memory {
     int to_pack;
     int to_send;
-    int take_from;
+    int pack_from;
+    int send_from;
     int put_to;
     int tasks[MAX_TASKS];
 } shared_memory;
 
-struct sembuf block = {.sem_num=3, .sem_op=-1, .sem_flg=0};
-struct sembuf unblock = {.sem_num=3, .sem_op=1, .sem_flg=0};
+struct sembuf block_pack = {.sem_num=3, .sem_op=-1, .sem_flg=0};
+struct sembuf unblock_pack = {.sem_num=3, .sem_op=1, .sem_flg=0};
+
+struct sembuf block_send = {.sem_num=4, .sem_op=-1, .sem_flg=0};
+struct sembuf unblock_send = {.sem_num=4, .sem_op=1, .sem_flg=0};
+
+struct sembuf block_receive = {.sem_num=5, .sem_op=-1, .sem_flg=0};
+struct sembuf unblock_receive = {.sem_num=5, .sem_op=1, .sem_flg=0};
 
 struct sembuf receive_task = {.sem_num=0, .sem_op=-1, .sem_flg=0};
 struct sembuf send_task = {.sem_num=0, .sem_op=1, .sem_flg=0};

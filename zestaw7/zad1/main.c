@@ -29,7 +29,7 @@ void create_shm_sem(){
         EXIT("Error creating key. errno: %d", errno)
     }
 
-    sem_id = semget(k, 4, IPC_CREAT | IPC_EXCL | IPC_R | IPC_W | IPC_M);
+    sem_id = semget(k, 6, IPC_CREAT | IPC_EXCL | IPC_R | IPC_W | IPC_M);
     if(sem_id == -1){
         EXIT("Error creating semaphore. errno: %d", errno)
     }
@@ -55,7 +55,8 @@ void create_shm_sem(){
 
     /// SET VALUES
     memory->put_to = 0;
-    memory->take_from = 0;
+    memory->pack_from = 0;
+    memory->send_from = 0;
     memory->to_pack = 0;
     memory->to_send = 0;
 
@@ -65,15 +66,23 @@ void create_shm_sem(){
     union semun arg2;
     union semun arg3;
     union semun arg4;
+    union semun arg5;
+    union semun arg6;
+
     arg1.val = MAX_TASKS;
     arg2.val = 0;
     arg3.val = 0;
     arg4.val = 1;
+    arg5.val = 1;
+    arg6.val = 1;
 
     semctl(sem_id, 0, SETVAL, arg1);
     semctl(sem_id, 1, SETVAL, arg2);
     semctl(sem_id, 2, SETVAL, arg3);
     semctl(sem_id, 3, SETVAL, arg4);
+    semctl(sem_id, 4, SETVAL, arg5);
+    semctl(sem_id, 5, SETVAL, arg6);
+
     ///
 }
 

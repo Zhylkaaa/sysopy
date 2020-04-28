@@ -16,20 +16,22 @@ int main(){
 
     while(1){
         semop(sem_id, &pack, 1);
-        semop(sem_id, &block, 1);
+        semop(sem_id, &block_pack, 1);
 
-        memory->tasks[memory->take_from] *= 2;
+        memory->tasks[memory->pack_from] *= 2;
         --memory->to_pack;
         ++memory->to_send;
         printf("(%d %d) Przygotowałem zamówienie o wielkości %d: . Liczba zamównień do przygotowania: %d. Liczba zamównień do wysłania: %d.\n",\
                     getpid(), time(NULL),\
-                    memory->tasks[memory->take_from], \
+                    memory->tasks[memory->pack_from], \
                     memory->to_pack, memory->to_send);
+
+        memory->pack_from = (memory->pack_from + 1) % MAX_TASKS;
 
         fflush(stdout);
         sleep(1);
         semop(sem_id, &to_send, 1);
-        semop(sem_id, &unblock, 1);
+        semop(sem_id, &unblock_pack, 1);
     }
 
     return 0;

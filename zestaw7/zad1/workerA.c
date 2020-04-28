@@ -16,6 +16,7 @@ int main(){
 
     while(1){
         semop(sem_id, &receive_task, 1);
+        semop(sem_id, &block_receive, 1);
 
         memory->tasks[memory->put_to] = rand() % MAX_TASK_SIZE;
         ++memory->to_pack;
@@ -30,6 +31,7 @@ int main(){
         memory->put_to = (memory->put_to + 1) % MAX_TASKS;
 
         semop(sem_id, &to_pack, 1);
+        semop(sem_id, &unblock_receive, 1);
     }
 
     return 0;
