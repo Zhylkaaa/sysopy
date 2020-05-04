@@ -5,4 +5,4 @@ all: compile test
 compile: histogram.c
 		$(CC) -o histogram histogram.c
 test: histogram.c
-	./histogram 4 block dragon.ascii.pgm cokolwiek.txt
+	./histogram 2 block brain_604.ascii.pgm cokolwiek.txt

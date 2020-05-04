@@ -173,6 +173,7 @@ int main(int argc, char** argv){
 
     FILE* in = fopen(argv[3], "r");
     FILE* out = fopen(argv[4], "w+");
+    int out_fd = fileno(out);
 
     char* type[10];
     fscanf(in, "%s", (char*) type);
@@ -192,6 +193,9 @@ int main(int argc, char** argv){
         }
     }
 
+    struct timespec start;
+    clock_gettime(CLOCK_REALTIME, &start);
+
     if(equals(argv[2], "sign")){
         handle_sign();
     } else if(equals(argv[2], "block")){
@@ -202,8 +206,17 @@ int main(int argc, char** argv){
         EXIT("Error: invalid second argument. Allowed values: sign / block / interleaved\n")
     }
 
-    int c = 0;
+    struct timespec end;
+    clock_gettime(CLOCK_REALTIME, &end);
 
+    printf("time: %ld s %ld ns", end.tv_sec - start.tv_sec, end.tv_nsec - start.tv_nsec);
+    fflush(stdout);
+
+    if(dup2(out_fd, fileno(stdout)) == -1){
+        EXIT("Error: can't redirect output to output file");
+    }
+
+    int c = 0;
     for(int i = 0;i<MAX_VAL;i++) {
         printf("Count of %d = %d\n", i, hist[i]);
         c+= hist[i];
